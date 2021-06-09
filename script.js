@@ -12,6 +12,9 @@ const stableMarketCapEl = document.querySelector('#stableMarketCap')
 const totalMarketCapEl = document.querySelector('#totalMarketCap')
 const totalVolume24hrsEl = document.querySelector('#totalVolume24hrs')
 
+const table = document.querySelector('#coins')
+const container = document.querySelector('#charting')
+
 function formatBigNumbers(x){
     return x.toLocaleString();
 }
@@ -68,8 +71,38 @@ request('GET', 'https://pro-api.coinmarketcap.com/v1/partners/flipside-crypto/fc
 //     console.log(JSON.parse(r5.target.responseText), 'this is r5')
 // }).catch()
 
-request('GET', 'https://data.messari.io/api/v2/assets?limit=500').then((r6)=>{ //https://messari.io/api/docs#tag/Assets
-    console.log(JSON.parse(r6.target.responseText), 'this is r6')
+request('GET', 'https://data.messari.io/api/v2/assets?limit=500').then((r6)=>{ //The api i am using to get the top 500 crypto tokens information is: https://messari.io/api/docs#tag/Assets
+    let text = JSON.parse(r6.target.responseText)
+    let importantInfo = [];
+    let tblBody = document.createElement('tbody')
+    for(let i = 0; i < text.data.length; i++){ //runs through the arrays that contains all the tokens, there are 500 tokens we are looking at it
+        //  console.log(text.data[i]) //Logs every single array, which contains our unique toens
+        let coinSymbol = text.data[i].symbol
+        let coinName = text.data[i].name
+        let coinAllTimeHigh = text.data[i].metrics.all_time_high.price
+        let coinMarketCapRank = text.data[i].metrics.marketcap.rank
+        let coinMarketCapDollar = text.data[i].metrics.marketcap.current_marketcap_usd
+        let coinCurrentPrice = text.data[i].metrics.market_data.price_usd
+        let volumeLast24Hrs = text.data[i].metrics.market_data.real_volume_last_24_hours
+        let tokenInfo = [coinMarketCapRank, coinSymbol, coinName, dollar_format.format(coinMarketCapDollar), dollar_format.format(coinAllTimeHigh), dollar_format.format(coinCurrentPrice), dollar_format.format(volumeLast24Hrs)]
+        importantInfo.push(tokenInfo)
+     
+        let row = document.createElement('tr')
+        for(let j = 0; j < 7; j++){
+            let cell = document.createElement('td')
+
+            let cellText = document.createTextNode(importantInfo[i][j])
+            cell.appendChild(cellText)
+
+            row.appendChild(cell)
+        }
+        tblBody.appendChild(row)
+    }
+    table.appendChild(tblBody)
+    container.appendChild(table)
+    table.setAttribute('border', '2')
+    
+    
 }).catch();
 
  
