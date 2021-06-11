@@ -15,6 +15,9 @@ const totalVolume24hrsEl = document.querySelector('#totalVolume24hrs')
 const table = document.querySelector('#coins')
 const container = document.querySelector('#charting')
 
+const searchBtn = document.querySelector('#searchBtn')
+const searchInput = document.querySelector('#searchInput')
+
 function formatBigNumbers(x){
     return x.toLocaleString();
 }
@@ -74,6 +77,7 @@ request('GET', 'https://pro-api.coinmarketcap.com/v1/partners/flipside-crypto/fc
 request('GET', 'https://data.messari.io/api/v2/assets?limit=500').then((r6)=>{ //The api i am using to get the top 500 crypto tokens information is: https://messari.io/api/docs#tag/Assets
     let text = JSON.parse(r6.target.responseText)
     let importantInfo = [];
+    let criticalInfo = [];
     let tblBody = document.createElement('tbody')
     for(let i = 0; i < text.data.length; i++){ //runs through the arrays that contains all the tokens, there are 500 tokens we are looking at it
         //  console.log(text.data[i]) //Logs every single array, which contains our unique toens
@@ -100,13 +104,75 @@ request('GET', 'https://data.messari.io/api/v2/assets?limit=500').then((r6)=>{ /
     }
     table.appendChild(tblBody)
     container.appendChild(table)
-    table.setAttribute('border', '2')
-    
+
+    searchBtn.addEventListener('click', () => {
+        // console.log(searchInput.value.toLocaleString())
+        for(let i = 0; i < text.data.length; i++){ //Run through the 500 arrays of crypto information
+            if(text.data[i].name === searchInput.value || text.data[i].symbol === searchInput.value || text.data[i].metrics.marketcap.rank === searchInput.value){ //We want to grab the name inside of text.data[i].name or the symbol and compare that to the value theuser entered in our search box, if either of them exist then we want to clear the table  we have
+                while(table.hasChildNodes()){  //Removes nodes from table while there are still nodes to be removed
+                    table.removeChild(table.firstChild)
+                }
+                //We want to innerHTML of our table to the default header and the information of the coin the user enters, this only works if name or symbol or rank line up properply.
+                let marketCapFormatted = dollar_format.format(text.data[i].metrics.marketcap.current_marketcap_usd)
+                let allTimeHighFormatted = dollar_format.format(text.data[i].metrics.all_time_high.price)
+                let currentPriceFormatted  = dollar_format.format(text.data[i].metrics.market_data.price_usd)
+                let currentVolume24hrs =  dollar_format.format(text.data[i].metrics.market_data.real_volume_last_24_hours)
+                table.innerHTML = ` 
+                    <tr>
+                        <th>Market Cap Rank</th>
+                        <th>Coin Symbol</th>
+                        <th>Coin Name</th>
+                        <th>Market Cap</th>
+                        <th>All Time High</th>
+                        <th>Current Price</th>
+                        <th>Volume over 24hrs</th>
+                    </tr>
+                    <tr>
+                        <td>${text.data[i].metrics.marketcap.rank}</td>
+                        <td>${text.data[i].symbol}</td>
+                        <td>${text.data[i].name}</td>
+                        <td>${marketCapFormatted}</td>
+                        <td>${allTimeHighFormatted}</td>
+                        <td>${currentPriceFormatted}</td>
+                        <td>${currentVolume24hrs}</td>
+                `
+            }
+        }
+        if(searchInput.value === ''){ //If the search Field is empty we want to rebuild the entire table, this code is the same code used to initalize the table at the beginning
+            table.innerHTML = '';
+            //Sets the header of the table.
+            table.innerHTML = `
+                <tr>
+                <th>Market Cap Rank</th>
+                <th>Coin Symbol</th>
+                <th>Coin Name</th>
+                <th>Market Cap</th>
+                <th>All Time High</th>
+                <th>Current Price</th>
+                <th>Volume over 24hrs</th>
+                </tr>
+            `
+            for(let k = 0; k < text.data.length; k++){ //Loop through all 500 arrays, get the data we want want put it inside of tokenInfo array then push it into criticalInfo array then loop through the nested arrays nad place the infromation inside of cells/rows then append to the table. 
+                let tokenInfo = [text.data[k].metrics.marketcap.rank, text.data[k].symbol, text.data[k].name, dollar_format.format(text.data[k].metrics.marketcap.current_marketcap_usd), dollar_format.format(text.data[k].metrics.all_time_high.price), dollar_format.format(text.data[k].metrics.market_data.price_usd), dollar_format.format(text.data[k].metrics.market_data.real_volume_last_24_hours)]
+                criticalInfo.push(tokenInfo)
+                let rows = document.createElement('tr')
+                console.log('rows')
+                for(let j = 0; j < 7; j++){
+                    let cell = document.createElement('td')
+        
+                    let cellText = document.createTextNode(criticalInfo[k][j])
+                    cell.appendChild(cellText)
+        
+                    rows.appendChild(cell)
+                }
+                tblBody.appendChild(rows)
+            }
+            table.appendChild(tblBody)
+            container.appendChild(table)
+        }
+    })
     
 }).catch();
-
- 
-
 
 function request(method, url){
     return new Promise(function(resolve, reject){
@@ -117,7 +183,6 @@ function request(method, url){
         xhr.send();
     })
 }
-
 
 
 
