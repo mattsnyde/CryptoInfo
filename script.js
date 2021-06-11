@@ -174,6 +174,7 @@ request('GET', 'https://data.messari.io/api/v2/assets?limit=500').then((r6)=>{ /
     
 }).catch();
 
+
 function request(method, url){
     return new Promise(function(resolve, reject){
         var xhr = new XMLHttpRequest();
