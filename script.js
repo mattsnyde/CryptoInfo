@@ -90,10 +90,10 @@ request('GET', 'https://data.messari.io/api/v2/assets?limit=500').then((r6)=>{ /
         let volumeLast24Hrs = text.data[i].metrics.market_data.real_volume_last_24_hours
         let tokenInfo = [coinMarketCapRank, coinSymbol, coinName, dollar_format.format(coinMarketCapDollar), dollar_format.format(coinAllTimeHigh), dollar_format.format(coinCurrentPrice), dollar_format.format(volumeLast24Hrs)]
         importantInfo.push(tokenInfo)
-     
         let row = document.createElement('tr')
         for(let j = 0; j < 7; j++){
-            let cell = document.createElement('td')
+
+             let cell = document.createElement('td')
 
             let cellText = document.createTextNode(importantInfo[i][j])
             cell.appendChild(cellText)
@@ -101,23 +101,147 @@ request('GET', 'https://data.messari.io/api/v2/assets?limit=500').then((r6)=>{ /
             row.appendChild(cell)
         }
         tblBody.appendChild(row)
+
+        row.addEventListener('click', () => { //When the user clicks on a row we want to update the localStorage of addToWatchList. 
+            // row.color.style = 'yellow'
+            let quickStore = [row.innerHTML] //Get the innerHTML of the row the user has clicked on
+            if(localStorage.getItem('addToWatchList') != null){ //Check to make sure our localSTORAGE IS NOT EQUAL TO KNOW
+                for(let i = 0; i < JSON.parse(localStorage.getItem('addToWatchList')).length; i++){ //Loop through the first array 
+                     for(let j = 0; j < JSON.parse(localStorage.getItem('addToWatchList'))[i].length; j++) //Access the second array
+                    if(quickStore[0].split('<td>')[2].split('</td>')[0] == JSON.parse(localStorage.getItem('addToWatchList'))[i][j].split('<td>')[2].split('</td>')[0]){ //Access the ticker symbols in string version of the row the user has clicked on and compare it to all of the previous ones the user has clicked on by accessing the nested array inside of localStorage and splitting the td's aapart
+                        console.log('nope')
+                        quickStore = []; //If they are === we will set quickStore back to an empty array so we are not addign duplicates
+                    }
+                }
+            }
+            let new_data =quickStore //assign new_data to quickstore
+ 
+            if(new_data.length !== 0){ //as long as new_data !==0 we will add the new_data to localStorage, if new_data.length is 0 that means that what the user clicked on was a duplicate. 
+                if(localStorage.getItem('addToWatchList') == null){ //if null initialize LS with empty array
+                    localStorage.setItem('addToWatchList', '[]')
+                }
+                let old_data = JSON.parse(localStorage.getItem('addToWatchList')) //let old_data === current data inside of LS
+                old_data.push(new_data) //add to new Data to LS
+                localStorage.setItem('addToWatchList', JSON.stringify(old_data))
+            }
+        })
     }
     table.appendChild(tblBody)
     container.appendChild(table)
 
     searchBtn.addEventListener('click', () => {
-        // console.log(searchInput.value.toLocaleString())
-        for(let i = 0; i < text.data.length; i++){ //Run through the 500 arrays of crypto information
-            if(text.data[i].name === searchInput.value || text.data[i].symbol === searchInput.value || text.data[i].metrics.marketcap.rank === searchInput.value){ //We want to grab the name inside of text.data[i].name or the symbol and compare that to the value theuser entered in our search box, if either of them exist then we want to clear the table  we have
-                while(table.hasChildNodes()){  //Removes nodes from table while there are still nodes to be removed
-                    table.removeChild(table.firstChild)
-                }
-                //We want to innerHTML of our table to the default header and the information of the coin the user enters, this only works if name or symbol or rank line up properply.
-                let marketCapFormatted = dollar_format.format(text.data[i].metrics.marketcap.current_marketcap_usd)
-                let allTimeHighFormatted = dollar_format.format(text.data[i].metrics.all_time_high.price)
-                let currentPriceFormatted  = dollar_format.format(text.data[i].metrics.market_data.price_usd)
-                let currentVolume24hrs =  dollar_format.format(text.data[i].metrics.market_data.real_volume_last_24_hours)
-                table.innerHTML = ` 
+        let tokenInfo = [];
+        let criticalInfo = [];
+        let tableBody = document.createElement('tbody')
+        searchFeature(text, table, tokenInfo, criticalInfo, tableBody)
+        //  for(let i = 0; i < text.data.length; i++){ //Run through the 500 arrays of crypto information
+        //     if(text.data[i].name === searchInput.value || text.data[i].symbol === searchInput.value || text.data[i].metrics.marketcap.rank === searchInput.value){ //We want to grab the name inside of text.data[i].name or the symbol and compare that to the value theuser entered in our search box, if either of them exist then we want to clear the table  we have
+        //         while(table.hasChildNodes()){  //Removes nodes from table while there are still nodes to be removed
+        //             table.removeChild(table.firstChild)
+        //         }
+        //         //We want to innerHTML of our table to the default header and the information of the coin the user enters, this only works if name or symbol or rank line up properply.
+        //         let marketCapFormatted = dollar_format.format(text.data[i].metrics.marketcap.current_marketcap_usd)
+        //         let allTimeHighFormatted = dollar_format.format(text.data[i].metrics.all_time_high.price)
+        //         let currentPriceFormatted  = dollar_format.format(text.data[i].metrics.market_data.price_usd)
+        //         let currentVolume24hrs =  dollar_format.format(text.data[i].metrics.market_data.real_volume_last_24_hours)
+        //         table.innerHTML = ` 
+        //             <tr>
+        //                 <th>Market Cap Rank</th>
+        //                 <th>Coin Symbol</th>
+        //                 <th>Coin Name</th>
+        //                 <th>Market Cap</th>
+        //                 <th>All Time High</th>
+        //                 <th>Current Price</th>
+        //                 <th>Volume over 24hrs</th>
+        //             </tr>
+        //             <tr>
+        //                 <td>${text.data[i].metrics.marketcap.rank}</td>
+        //                 <td>${text.data[i].symbol}</td>
+        //                 <td>${text.data[i].name}</td>
+        //                 <td>${marketCapFormatted}</td>
+        //                 <td>${allTimeHighFormatted}</td>
+        //                 <td>${currentPriceFormatted}</td>
+        //                 <td>${currentVolume24hrs}</td>
+                        
+        //         `
+        //     }
+        // }
+        // if(searchInput.value === ''){ //If the search Field is empty we want to rebuild the entire table, this code is the same code used to initalize the table at the beginning
+        //     table.innerHTML = '';
+        //     //Sets the header of the table.
+        //     table.innerHTML = `
+        //         <tr>
+        //         <th>Market Cap Rank</th>
+        //         <th>Coin Symbol</th>
+        //         <th>Coin Name</th>
+        //         <th>Market Cap</th>
+        //         <th>All Time High</th>
+        //         <th>Current Price</th>
+        //         <th>Volume over 24hrs</th>
+        //         </tr>
+        //     `
+        //     for(let k = 0; k < text.data.length; k++){ //Loop through all 500 arrays, get the data we want want put it inside of tokenInfo array then push it into criticalInfo array then loop through the nested arrays nad place the infromation inside of cells/rows then append to the table. 
+        //         let tokenInfo = [text.data[k].metrics.marketcap.rank, text.data[k].symbol, text.data[k].name, dollar_format.format(text.data[k].metrics.marketcap.current_marketcap_usd), dollar_format.format(text.data[k].metrics.all_time_high.price), dollar_format.format(text.data[k].metrics.market_data.price_usd), dollar_format.format(text.data[k].metrics.market_data.real_volume_last_24_hours)]
+        //         criticalInfo.push(tokenInfo)
+        //         let rows = document.createElement('tr')
+        //         console.log('rows')
+        //         for(let j = 0; j < 7; j++){
+        //             let cell = document.createElement('td')
+        
+        //             let cellText = document.createTextNode(criticalInfo[k][j])
+        //             cell.appendChild(cellText)
+        
+        //             rows.appendChild(cell)
+        //         }
+        //         tblBody.appendChild(rows)
+        //     }
+        //     table.appendChild(tblBody)
+        //     container.appendChild(table)
+        // }
+    })
+    
+}).catch();
+
+ const watchListBtn = document.querySelector('#watchList')
+ const watchListTbl = document.querySelector('#watchListCoins')
+ function displayWatchList(){
+    let crucialInfo = watchList();
+    watchListBtn.addEventListener('click', () => {
+        let tblBody = document.createElement('tbody')
+        for(let k = 0; k < crucialInfo.length; k++){
+            let row = document.createElement('tr')
+            for(let l = 0; l < 7; l++){
+                let cell = document.createElement('td')
+                let cellText = document.createTextNode(crucialInfo[k][l])
+                console.log(cellText)
+                cell.appendChild(cellText)
+                row.appendChild(cell)
+            }
+            tblBody.appendChild(row)
+        }
+        watchListTbl.appendChild(tblBody)
+        container.appendChild(watchListTbl)
+    })
+
+    searchBtn.addEventListener('click', () => {
+        let tableBody = document.createElement('tbody')
+        console.log('break here -----------------------------------------------------------------------------------------------------------------------')
+        for(let i = 0; i < crucialInfo.length; i++){
+                if(searchInput.value === crucialInfo[i][1] || searchInput.value === crucialInfo[i][2] || searchInput.value === crucialInfo[i][0]){ //Check to see if user input matches the name, symbol, or rank number of any coin listed on the watchList
+                    while(watchListTbl.hasChildNodes()){  //Removes nodes from table while there are still nodes to be removed
+                        watchListTbl.removeChild(watchListTbl.firstChild)
+                    }
+                    //Lines 234-240 I am looping through crucialInfo nested array to extract the information I need
+                    let marketCapRank = crucialInfo[i][0]
+                    let coinSymbol = crucialInfo[i][1]
+                    let coinName = crucialInfo[i][2]
+                    let coinMarketCapDollar = crucialInfo[i][3]
+                    let coinAllTimeHigh = crucialInfo[i][4]
+                    let coinCurrentPrice = crucialInfo[i][5]
+                    let volumeLast24Hrs = crucialInfo[i][6]
+
+                    //Lines 242-261 set the header of the watchList 
+                    watchListTbl.innerHTML = ` 
                     <tr>
                         <th>Market Cap Rank</th>
                         <th>Coin Symbol</th>
@@ -128,53 +252,50 @@ request('GET', 'https://data.messari.io/api/v2/assets?limit=500').then((r6)=>{ /
                         <th>Volume over 24hrs</th>
                     </tr>
                     <tr>
-                        <td>${text.data[i].metrics.marketcap.rank}</td>
-                        <td>${text.data[i].symbol}</td>
-                        <td>${text.data[i].name}</td>
-                        <td>${marketCapFormatted}</td>
-                        <td>${allTimeHighFormatted}</td>
-                        <td>${currentPriceFormatted}</td>
-                        <td>${currentVolume24hrs}</td>
+                        <td>${marketCapRank}</td>
+                        <td>${coinSymbol}</td>
+                        <td>${coinName}</td>
+                        <td>${coinMarketCapDollar}</td>
+                        <td>${coinAllTimeHigh}</td>
+                        <td>${coinCurrentPrice}</td>
+                        <td>${volumeLast24Hrs}</td>       
                 `
-            }
-        }
-        if(searchInput.value === ''){ //If the search Field is empty we want to rebuild the entire table, this code is the same code used to initalize the table at the beginning
-            table.innerHTML = '';
-            //Sets the header of the table.
-            table.innerHTML = `
-                <tr>
-                <th>Market Cap Rank</th>
-                <th>Coin Symbol</th>
-                <th>Coin Name</th>
-                <th>Market Cap</th>
-                <th>All Time High</th>
-                <th>Current Price</th>
-                <th>Volume over 24hrs</th>
-                </tr>
-            `
-            for(let k = 0; k < text.data.length; k++){ //Loop through all 500 arrays, get the data we want want put it inside of tokenInfo array then push it into criticalInfo array then loop through the nested arrays nad place the infromation inside of cells/rows then append to the table. 
-                let tokenInfo = [text.data[k].metrics.marketcap.rank, text.data[k].symbol, text.data[k].name, dollar_format.format(text.data[k].metrics.marketcap.current_marketcap_usd), dollar_format.format(text.data[k].metrics.all_time_high.price), dollar_format.format(text.data[k].metrics.market_data.price_usd), dollar_format.format(text.data[k].metrics.market_data.real_volume_last_24_hours)]
-                criticalInfo.push(tokenInfo)
-                let rows = document.createElement('tr')
-                console.log('rows')
-                for(let j = 0; j < 7; j++){
-                    let cell = document.createElement('td')
-        
-                    let cellText = document.createTextNode(criticalInfo[k][j])
-                    cell.appendChild(cellText)
-        
-                    rows.appendChild(cell)
                 }
-                tblBody.appendChild(rows)
-            }
-            table.appendChild(tblBody)
-            container.appendChild(table)
+                if(searchInput.value === ''){ //If nothing is in the search bar and user hits the button then I want to return everything inside of the watch list
+                    watchListTbl.innerHTML = '';
+                    //Sets the header of the table.
+                    watchListTbl.innerHTML = `
+                        <tr>
+                        <th>Market Cap Rank</th>
+                        <th>Coin Symbol</th>
+                        <th>Coin Name</th>
+                        <th>Market Cap</th>
+                        <th>All Time High</th>
+                        <th>Current Price</th>
+                        <th>Volume over 24hrs</th>
+                        </tr>
+                    `
+                    for(let k = 0; k < crucialInfo.length; k++){ //Loop through all arrays inside of crucialInfo, get the data we want want and the begin placing it inside of cells
+                        let rows = document.createElement('tr') //create rows
+                         for(let j = 0; j < 7; j++){
+                            let cell = document.createElement('td') //create cells
+                
+                            let cellText = document.createTextNode(crucialInfo[k][j]) //populate cells with the information inside of the nested array crucialInfo
+                            cell.appendChild(cellText)
+                
+                            rows.appendChild(cell) //append the cells to the rows
+                        }
+                        tableBody.appendChild(rows) //append the rows to the body of the table
+                    }
+                    watchListTbl.appendChild(tableBody) //append our table to the body of the table
+                    container.appendChild(watchListTbl) //append our table to the container
+                }
         }
     })
-    
-}).catch();
+}
+displayWatchList(); // <-------------------------------------------------Need to move this, everytime you click on the WATCHLISTBTN the list grows by 1 set, as in localStorage is appended to the table 1 time, then 2 times, then 3 times, then 4, and so forth..
 
-
+ 
 function request(method, url){
     return new Promise(function(resolve, reject){
         var xhr = new XMLHttpRequest();
@@ -187,4 +308,110 @@ function request(method, url){
 
 
 
- 
+ function watchList(){
+    let importantInfo = [];
+    for(let i = 0; i < JSON.parse(localStorage.getItem('addToWatchList')).length; i++){ //Loop through the first array 
+        for(let j = 0; j < JSON.parse(localStorage.getItem('addToWatchList'))[i].length; j++){//Access the second array
+            let coinMarketCapRank = JSON.parse(localStorage.getItem('addToWatchList'))[i][j].split('<td>')[1].split('</td>')[0] //rank
+            let coinSymbol = JSON.parse(localStorage.getItem('addToWatchList'))[i][j].split('<td>')[2].split('</td>')[0]
+            let coinName = JSON.parse(localStorage.getItem('addToWatchList'))[i][j].split('<td>')[3].split('</td>')[0]
+            let coinMarketCap = JSON.parse(localStorage.getItem('addToWatchList'))[i][j].split('<td>')[4].split('</td>')[0]
+            let coinAllTimeHigh = JSON.parse( localStorage.getItem('addToWatchList'))[i][j].split('<td>')[5].split('</td>')[0]
+            let coinCurrentPrice = JSON.parse(localStorage.getItem('addToWatchList'))[i][j].split('<td>')[6].split('</td>')[0]
+            let volumeLast24hrs = JSON.parse(localStorage.getItem('addToWatchList'))[i][j].split('<td>')[7].split('</td>')[0]
+         
+            let tokenInfo = [coinMarketCapRank, coinSymbol, coinName, coinMarketCap, coinAllTimeHigh, coinCurrentPrice, volumeLast24hrs]
+            importantInfo.push(tokenInfo)
+        }
+    }
+    return importantInfo
+ }
+
+ function searchFeature(arrayName, tableName, arrayName2, arrayName3, tBodyName){
+    for(let i = 0; i < arrayName.data.length; i++){ //Run through the 500 arrays of crypto information
+        if(arrayName.data[i].name === searchInput.value || arrayName.data[i].symbol === searchInput.value || arrayName.data[i].metrics.marketcap.rank === searchInput.value){ //We want to grab the name inside of text.data[i].name or the symbol and compare that to the value theuser entered in our search box, if either of them exist then we want to clear the table  we have
+            while(tableName.hasChildNodes()){  //Removes nodes from table while there are still nodes to be removed
+                tableName.removeChild(tableName.firstChild)
+                console.log('removed')
+
+            }
+            //We want to innerHTML of our table to the default header and the information of the coin the user enters, this only works if name or symbol or rank line up properply.
+            let marketCapFormatted = dollar_format.format(arrayName.data[i].metrics.marketcap.current_marketcap_usd)
+            let allTimeHighFormatted = dollar_format.format(arrayName.data[i].metrics.all_time_high.price)
+            let currentPriceFormatted  = dollar_format.format(arrayName.data[i].metrics.market_data.price_usd)
+            let currentVolume24hrs =  dollar_format.format(arrayName.data[i].metrics.market_data.real_volume_last_24_hours)
+
+            //Lines 342-360 create the heading of the table and populate with the data the user is looking for.
+            tableName.innerHTML = ` 
+                <tr>
+                    <th>Market Cap Rank</th>
+                    <th>Coin Symbol</th>
+                    <th>Coin Name</th>
+                    <th>Market Cap</th>
+                    <th>All Time High</th>
+                    <th>Current Price</th>
+                    <th>Volume over 24hrs</th>
+                </tr>
+                <tr>
+                    <td>${arrayName.data[i].metrics.marketcap.rank}</td>
+                    <td>${arrayName.data[i].symbol}</td>
+                    <td>${arrayName.data[i].name}</td>
+                    <td>${marketCapFormatted}</td>
+                    <td>${allTimeHighFormatted}</td>
+                    <td>${currentPriceFormatted}</td>
+                    <td>${currentVolume24hrs}</td>       
+            `
+        }
+    }
+    if(searchInput.value === ''){ //If the search Field is empty we want to rebuild the entire table, this code is the same code used to initalize the table at the beginning
+        tableName.innerHTML = '';
+        //Sets the header of the table.
+        tableName.innerHTML = `
+            <tr>
+            <th>Market Cap Rank</th>
+            <th>Coin Symbol</th>
+            <th>Coin Name</th>
+            <th>Market Cap</th>
+            <th>All Time High</th>
+            <th>Current Price</th>
+            <th>Volume over 24hrs</th>
+            </tr>
+        `
+        for(let k = 0; k < arrayName.data.length; k++){ //Loop through all 500 arrays, get the data we want want put it inside of tokenInfo array then push it into criticalInfo array then loop through the nested arrays nad place the infromation inside of cells/rows then append to the table. 
+            let arrayName2 = [arrayName.data[k].metrics.marketcap.rank, arrayName.data[k].symbol, arrayName.data[k].name, dollar_format.format(arrayName.data[k].metrics.marketcap.current_marketcap_usd), dollar_format.format(arrayName.data[k].metrics.all_time_high.price), dollar_format.format(arrayName.data[k].metrics.market_data.price_usd), dollar_format.format(arrayName.data[k].metrics.market_data.real_volume_last_24_hours)]
+            arrayName3.push(arrayName2)
+            let rows = document.createElement('tr')
+            console.log('rows')
+            for(let j = 0; j < 7; j++){
+                let cell = document.createElement('td')
+    
+                let cellText = document.createTextNode(arrayName3[k][j])
+                cell.appendChild(cellText)
+    
+                rows.appendChild(cell)
+            }
+            tBodyName.appendChild(rows)
+        }
+        tableName.appendChild(tBodyName)
+        container.appendChild(tableName)
+    }
+ }
+
+
+ function toggleTables(){
+    let watchListBtnClickCount = 1;
+    watchListBtn.addEventListener('click', () => {
+        watchListTbl.style.zIndex = 100;
+        table.style.zIndex = -100
+        table.style.display = 'none'
+        document.querySelector('#watchListCoins').hidden = false;
+        if(watchListBtnClickCount % 2 === 0){
+            table.style.display = 'block'
+            document.querySelector('#watchListCoins').hidden = true;
+            watchListTbl.style.zIndex = -100
+            table.style.zIndex = 100;
+        }
+        watchListBtnClickCount++
+    })
+ }
+toggleTables();

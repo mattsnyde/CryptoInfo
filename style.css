@@ -106,7 +106,7 @@ header .logo img{
 }
 
 .searchInput{
-    width: 90%;
+    width: 80%;
     height: 30px;
     margin-bottom: 20px;
     border-radius: 20px;
@@ -117,6 +117,18 @@ header .logo img{
     text-align: center;
     color: white;
     font-size: 20px;
+}
+
+.watchList{
+    border: none;
+    background-color: transparent;
+    color: white;
+    border: 3px solid rgba(0, 255, 0, 1);
+    height: 30px;
+    width: 100px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    margin-left: .5%
 }
 
 .searchInput::placeholder{
@@ -136,7 +148,7 @@ header .logo img{
     font-size: 20px;
     height: 30px;
     width: 60px;
-    margin-left: 3.5%;
+    margin-left: .5%;
     border-radius: 20px;
     color: white;
     background-color: transparent;
@@ -147,6 +159,8 @@ header .logo img{
      cursor: pointer;
  }
 
+
+
 .charting{
     position: absolute;
     top: 200%;
@@ -156,7 +170,7 @@ header .logo img{
     width: 50%;
 }
 
-.coins{
+.coins, .watchListCoins{
     z-index: 2;
     /* background-color: white; */
     width: 100%;
@@ -166,7 +180,7 @@ header .logo img{
     box-shadow: 0px 2px 12px rgba(32, 32, 32, .3)
  }
 
-.coins th{
+.coins th, .watchListCoins th{
     background-color: #bd9b93;  /* fallback for old browsers */
     font-family: 'Poppins', sans-serif;
     text-transform: uppercase;
@@ -174,11 +188,11 @@ header .logo img{
     font-size: 15px;
 }
 
-.coins th, td{
+.coins th, td, .watchListCoins th, td{
     padding: 10px 15px;
 }
 
- .coins td{
+ .coins td, .watchListCoins td{
      font-family: 'Poppins', sans-serif;
 
  }

@@ -31,8 +31,9 @@
         <div class="totalVolume24Hrs" id="totalVolume24hrs">Total Volume 24Hrs:</div> 
     <div class="charting" id='charting'>
         <input type="text" class="searchInput" id="searchInput" placeholder = 'Search By Coin Name'>
+        <button class="watchList" id="watchList">Watch List</button>
         <button class="searchBtn" id="searchBtn"><i class = 'fas fa-search'></i></button>
-       <table class="coins" id="coins">
+       <table class="coins" id="coins"  >
            <tr>
                <th>Market Cap Rank</th>
                <th>Coin Symbol</th>
@@ -42,6 +43,17 @@
                <th>Current Price</th>
                <th>Volume over 24hrs</th>
            </tr>
+       </table>
+       <table class = 'watchListCoins' id = 'watchListCoins' hidden>
+            <tr>
+                <th>Market Cap Rank</th>
+                <th>Coin Symbol</th>
+                <th>Coin Name</th>
+                <th>Market Cap</th>
+                <th>All Time High</th>
+                <th>Current Price</th>
+                <th>Volume over 24hrs</th>
+            </tr>
        </table>
     </div>
     <script src = 'script.js'></script>
