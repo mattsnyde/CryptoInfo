@@ -80,7 +80,6 @@ request('GET', 'https://data.messari.io/api/v2/assets?limit=500').then((r6)=>{ /
     let criticalInfo = [];
     let tblBody = document.createElement('tbody')
     for(let i = 0; i < text.data.length; i++){ //runs through the arrays that contains all the tokens, there are 500 tokens we are looking at it
-        //  console.log(text.data[i]) //Logs every single array, which contains our unique toens
         let coinSymbol = text.data[i].symbol
         let coinName = text.data[i].name
         let coinAllTimeHigh = text.data[i].metrics.all_time_high.price
@@ -102,8 +101,8 @@ request('GET', 'https://data.messari.io/api/v2/assets?limit=500').then((r6)=>{ /
         }
         tblBody.appendChild(row)
 
-        row.addEventListener('click', () => { //When the user clicks on a row we want to update the localStorage of addToWatchList. 
-            // row.color.style = 'yellow'
+
+        row.addEventListener('click', () => { //When the user clicks on a row we want to update the localStorage of addToWatchList.
             let quickStore = [row.innerHTML] //Get the innerHTML of the row the user has clicked on
             if(localStorage.getItem('addToWatchList') != null){ //Check to make sure our localSTORAGE IS NOT EQUAL TO KNOW
                 for(let i = 0; i < JSON.parse(localStorage.getItem('addToWatchList')).length; i++){ //Loop through the first array 
@@ -134,93 +133,76 @@ request('GET', 'https://data.messari.io/api/v2/assets?limit=500').then((r6)=>{ /
         let criticalInfo = [];
         let tableBody = document.createElement('tbody')
         searchFeature(text, table, tokenInfo, criticalInfo, tableBody)
-        //  for(let i = 0; i < text.data.length; i++){ //Run through the 500 arrays of crypto information
-        //     if(text.data[i].name === searchInput.value || text.data[i].symbol === searchInput.value || text.data[i].metrics.marketcap.rank === searchInput.value){ //We want to grab the name inside of text.data[i].name or the symbol and compare that to the value theuser entered in our search box, if either of them exist then we want to clear the table  we have
-        //         while(table.hasChildNodes()){  //Removes nodes from table while there are still nodes to be removed
-        //             table.removeChild(table.firstChild)
-        //         }
-        //         //We want to innerHTML of our table to the default header and the information of the coin the user enters, this only works if name or symbol or rank line up properply.
-        //         let marketCapFormatted = dollar_format.format(text.data[i].metrics.marketcap.current_marketcap_usd)
-        //         let allTimeHighFormatted = dollar_format.format(text.data[i].metrics.all_time_high.price)
-        //         let currentPriceFormatted  = dollar_format.format(text.data[i].metrics.market_data.price_usd)
-        //         let currentVolume24hrs =  dollar_format.format(text.data[i].metrics.market_data.real_volume_last_24_hours)
-        //         table.innerHTML = ` 
-        //             <tr>
-        //                 <th>Market Cap Rank</th>
-        //                 <th>Coin Symbol</th>
-        //                 <th>Coin Name</th>
-        //                 <th>Market Cap</th>
-        //                 <th>All Time High</th>
-        //                 <th>Current Price</th>
-        //                 <th>Volume over 24hrs</th>
-        //             </tr>
-        //             <tr>
-        //                 <td>${text.data[i].metrics.marketcap.rank}</td>
-        //                 <td>${text.data[i].symbol}</td>
-        //                 <td>${text.data[i].name}</td>
-        //                 <td>${marketCapFormatted}</td>
-        //                 <td>${allTimeHighFormatted}</td>
-        //                 <td>${currentPriceFormatted}</td>
-        //                 <td>${currentVolume24hrs}</td>
-                        
-        //         `
-        //     }
-        // }
-        // if(searchInput.value === ''){ //If the search Field is empty we want to rebuild the entire table, this code is the same code used to initalize the table at the beginning
-        //     table.innerHTML = '';
-        //     //Sets the header of the table.
-        //     table.innerHTML = `
-        //         <tr>
-        //         <th>Market Cap Rank</th>
-        //         <th>Coin Symbol</th>
-        //         <th>Coin Name</th>
-        //         <th>Market Cap</th>
-        //         <th>All Time High</th>
-        //         <th>Current Price</th>
-        //         <th>Volume over 24hrs</th>
-        //         </tr>
-        //     `
-        //     for(let k = 0; k < text.data.length; k++){ //Loop through all 500 arrays, get the data we want want put it inside of tokenInfo array then push it into criticalInfo array then loop through the nested arrays nad place the infromation inside of cells/rows then append to the table. 
-        //         let tokenInfo = [text.data[k].metrics.marketcap.rank, text.data[k].symbol, text.data[k].name, dollar_format.format(text.data[k].metrics.marketcap.current_marketcap_usd), dollar_format.format(text.data[k].metrics.all_time_high.price), dollar_format.format(text.data[k].metrics.market_data.price_usd), dollar_format.format(text.data[k].metrics.market_data.real_volume_last_24_hours)]
-        //         criticalInfo.push(tokenInfo)
-        //         let rows = document.createElement('tr')
-        //         console.log('rows')
-        //         for(let j = 0; j < 7; j++){
-        //             let cell = document.createElement('td')
-        
-        //             let cellText = document.createTextNode(criticalInfo[k][j])
-        //             cell.appendChild(cellText)
-        
-        //             rows.appendChild(cell)
-        //         }
-        //         tblBody.appendChild(rows)
-        //     }
-        //     table.appendChild(tblBody)
-        //     container.appendChild(table)
-        // }
     })
-    
 }).catch();
 
  const watchListBtn = document.querySelector('#watchList')
  const watchListTbl = document.querySelector('#watchListCoins')
+
+ let watchListBtnCount = 0;
  function displayWatchList(){
+    // while(watchListTbl.hasChildNodes()){  //Removes nodes from table while there are still nodes to be removed
+    //     watchListTbl.removeChild(watchListTbl.firstChild)
+    // }
     let crucialInfo = watchList();
     watchListBtn.addEventListener('click', () => {
-        let tblBody = document.createElement('tbody')
-        for(let k = 0; k < crucialInfo.length; k++){
-            let row = document.createElement('tr')
-            for(let l = 0; l < 7; l++){
-                let cell = document.createElement('td')
-                let cellText = document.createTextNode(crucialInfo[k][l])
-                console.log(cellText)
-                cell.appendChild(cellText)
-                row.appendChild(cell)
+        watchListBtnCount++
+        console.log(crucialInfo)
+        
+            //  for(let f = 0; f < watchListTbl.rows.length; f++){
+            //     for(let g = 0; g < watchListTbl.rows[f].cells.length; g++){
+            //         console.log(watchListTbl.rows[f].cells[g].innerHTML)
+            //     }
+            // }
+            // for(let k = 0; k < crucialInfo.length; k++){
+            //     for(let l = 0; l <  7; l++){
+                //     for(let f = 1, row; row = watchListTbl.rows[f]; f++){
+                //         for(let g = 0, col; col = row.cells[f]; g++){
+                //           console.log(col.innerText)
+                //         //   console.log(crucialInfo[k][l])
+                //         }
+                //    }
+            //     }
+            // }
+         
+        //  for(let i = 0; i < crucialInfo.length; i++){
+        //      for(let j = 0; j < watchListTbl.rows[1].cells[i]; j++){
+        //          console.log(watchListTbl.rows[1].cells[i])
+        //      }
+        //  }
+        // if(watchListBtnCount === 1){
+  
+            let tblBody = document.createElement('tbody')
+            for(let k = 0; k < crucialInfo.length; k++){
+                let row = document.createElement('tr')
+                for(let l = 0; l < 7; l++){
+                    let cell = document.createElement('td')
+                    let cellText = document.createTextNode(crucialInfo[k][l])
+                    // console.log('testing array', crucialInfo[k][0])
+                    cell.appendChild(cellText)
+                    row.appendChild(cell)
+                }
+                tblBody.appendChild(row)
             }
-            tblBody.appendChild(row)
-        }
-        watchListTbl.appendChild(tblBody)
-        container.appendChild(watchListTbl)
+            watchListTbl.appendChild(tblBody) //append our table to the body of the table
+            container.appendChild(watchListTbl) //append our table to the container
+            
+            // for(let i = 1; i < crucialInfo.length + 1; i++){
+            //     console.log(watchListTbl.rows[i].cells[1].innerText, 'how many rowas')
+               
+            // }
+            // for(let i = 0; i < crucialInfo.length; i++){
+            //     for(let l = 1; l < 2; l++){
+            //         console.log(crucialInfo[i][l], 'crucial input here')
+            //     }
+            // }
+            // if(watchListBtnCount % 2 === 0){
+            //     while(watchListTbl.hasChildNodes()){  //Removes nodes from table while there are still nodes to be removed
+            //         watchListTbl.removeChild(watchListTbl.firstChild)
+            //     }
+            // }
+
+        // }
     })
 
     searchBtn.addEventListener('click', () => {
@@ -228,9 +210,6 @@ request('GET', 'https://data.messari.io/api/v2/assets?limit=500').then((r6)=>{ /
         console.log('break here -----------------------------------------------------------------------------------------------------------------------')
         for(let i = 0; i < crucialInfo.length; i++){
                 if(searchInput.value === crucialInfo[i][1] || searchInput.value === crucialInfo[i][2] || searchInput.value === crucialInfo[i][0]){ //Check to see if user input matches the name, symbol, or rank number of any coin listed on the watchList
-                    while(watchListTbl.hasChildNodes()){  //Removes nodes from table while there are still nodes to be removed
-                        watchListTbl.removeChild(watchListTbl.firstChild)
-                    }
                     //Lines 234-240 I am looping through crucialInfo nested array to extract the information I need
                     let marketCapRank = crucialInfo[i][0]
                     let coinSymbol = crucialInfo[i][1]
@@ -328,8 +307,9 @@ function request(method, url){
  }
 
  function searchFeature(arrayName, tableName, arrayName2, arrayName3, tBodyName){
+     console.log('hello')
     for(let i = 0; i < arrayName.data.length; i++){ //Run through the 500 arrays of crypto information
-        if(arrayName.data[i].name === searchInput.value || arrayName.data[i].symbol === searchInput.value || arrayName.data[i].metrics.marketcap.rank === searchInput.value){ //We want to grab the name inside of text.data[i].name or the symbol and compare that to the value theuser entered in our search box, if either of them exist then we want to clear the table  we have
+        if(arrayName.data[i].name === searchInput.value || arrayName.data[i].symbol === searchInput.value || arrayName.data[i].metrics.marketcap.rank === parseInt(searchInput.value)){ //We want to grab the name inside of text.data[i].name or the symbol and compare that to the value theuser entered in our search box, if either of them exist then we want to clear the table  we have
             while(tableName.hasChildNodes()){  //Removes nodes from table while there are still nodes to be removed
                 tableName.removeChild(tableName.firstChild)
                 console.log('removed')
@@ -415,3 +395,72 @@ function request(method, url){
     })
  }
 toggleTables();
+
+// localStorage.clear();
+
+
+function countEm(){
+    let dupsArraySymbol = [];
+    let noDupsArraySymbol = [];
+    let realLength = [];
+    let fakeLength = [];
+    let amountOfDummyFakesIHave = [];
+    let numbersToRemove = [];
+    for(let i = 1; i < watchListTbl.rows.length; i++){
+        dupsArraySymbol.push(watchListTbl.rows[i].cells[1].innerText)
+        // console.log(watchListTbl.rows[i].cells[1].innerText, 'how many rowas')
+    }
+    console.log(dupsArraySymbol)
+    for(let i = 0; i < JSON.parse(localStorage.getItem('addToWatchList')).length; i++){ //Loop through the first array 
+        for(let j = 0; j < JSON.parse(localStorage.getItem('addToWatchList'))[i].length; j++){//Access the second array
+            noDupsArraySymbol.push(JSON.parse(localStorage.getItem('addToWatchList'))[i][j].split('<td>')[2].split('</td>')[0])
+        }
+    }
+    
+        realLength.push(JSON.parse(localStorage.getItem('addToWatchList')).length)
+        fakeLength.push(watchListTbl.rows.length)
+        console.log(realLength[0], 'the real number')
+        console.log(fakeLength[0], 'the fake number')
+
+        // if(fakeLength[0] > realLength[0]){
+        //     // console.log(fakeLength[0]-realLength[0])
+        //     for(let i = realLength[0] - 2; i < fakeLength[0]; i++){
+        //     //    console.log(i)
+        //     // document.getElementsByTagName('tr')[i].remove()
+        //     document.querySelector('#watchListCoins').deleteRow(i)
+        //     // console.log()
+        //     // console.log('the fake length', fakeLength[0])
+        //     }
+        // }
+        // for(let i = 0; i < watchListTbl.rows.length; i++){
+        //     console.log(i)
+        // }
+         
+        // for(let i = realLength[0] - 2; i < watchListTbl.rows.length; i++){
+        //     numbersToRemove.push(i)
+        //     console.log(i)
+        //     // document.querySelector('#watchListCoins').deleteRow(i)
+        // }
+        // console.log(numbersToRemove.length, 'length ')
+        // for(let i = 0; i < numbersToRemove.length; i++){
+            
+        //     document.querySelector('#watchListCoins').deleteRow(numbersToRemove[i])
+        //     console.log(watchListTbl.rows.length, 'the length of table after upodating it')
+        // }
+        // console.log('breakls-----------------------------------------------------------------------------------------------')
+        // if(fakeLength[0] > realLength[0]){
+        //     for(let i = realLength[0]; i < fakeLength[0] - realLength[0]; i++){
+        //         watchListTbl.rows.remove(i)
+        //     }
+        // }
+
+}
+let fakeBtnCount = 1;
+watchListBtn.addEventListener('click', () => {
+    // if(fakeBtnCount % 3 === 0){
+        countEm()
+    //}
+    // fakeBtnCount++;
+    // countEm();
+})
+// localStorage.clear()
