@@ -1,38 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyrtp Information</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container" id="container">
-        <header>
-            <div class="logo" id="logo"><img src="img/greenarrow2.png" alt=""></div>
-            <h1 class='title'>Crypto Market Watchers</h1>
-            <ul class = 'nav'>
-                <li class="home" id="home"><a href="index.html">Home</a></li>
-                <li class="socialArb" id="socialArb"><a href="socialArbitration.html">Social Arbitration</a></li>
-                <li class="charts" id="charts"><a href="charts.html">Charts</a></li>
-                <li class="news" id="news"><a href="#">News</a></li>
-                <li class="statistics" id="statistics"><a href="#">Statistics</a></li>
-            </ul>
-        </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crypto Information</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav>
+      <input type="checkbox" id="check" />
+      <label for="check">
+        <i class="fas fa-bars" id="btn"></i>
+        <i class="fas fa-times" id="cancel"></i>
+      </label>
+      <img class="logo" src="img/greenarrow2.png" alt="" />
+      <h1 class="title">Crypto Market Watchers</h1>
+      <ul class = 'header'>
+        <li class="home" id="home"><a href="index.html">Home</a></li>
+        <li class="socialArb" id="socialArb">
+          <a href="socialArbitration.html">Social Arbitration</a>
+        </li>
+        <li class="charts" id="charts"><a href="charts.html">Charts</a></li>
+        <li class="news" id="news"><a href="#">News</a></li>
+        <li class="statistics" id="statistics"><a href="#">Statistics</a></li>
+      </ul>
+    </nav>
+     <div class="stats">
+        <ul>
+            <li><div class="time" id="time">Time Stamp:</div></li>
+            <li><div class="defiMarketCap" id="defiMarketCap">Defi-Market Cap:</div></li>
+            <li><div class="altMarketCap" id="altMarketCap">Alt-Market Cap:</div></li>
+            <li><div class="stableMarketCap" id="stableMarketCap">Stable Market Cap:</div></li>
+            <li><div class="totalMarketCap" id="totalMarketCap">Total Market Cap:</div></li>
+            <li><div class="totalVolume24Hrs" id="totalVolume24hrs">Total Volume 24hrs:</li>
+        </ul>
     </div>
-    <div class="stats">
-        <div class="time" id="time">Time Stamp: </div>
-        <div class="defiMarketCap" id="defiMarketCap">Defi-Market Cap: </div>
-        <div class='altMarketCap' id='altMarketCap'>Alt-Market Cap: </div>
-        <div class="stableMarketCap" id="stableMarketCap">Stable Market Cap: </div>
-        <div class="totalMarketCap" id="totalMarketCap">Total Market Cap: </div>
-        <div class="totalVolume24Hrs" id="totalVolume24hrs">Total Volume 24Hrs:</div> 
-    <div class="charting" id='charting'>
+    <!-- <div class="charting" id='charting'>
         <input type="text" class="searchInput" id="searchInput" placeholder = 'Search By Coin Name'>
         <button class="watchList" id="watchList">Watch List</button>
-        <button class="searchBtn" id="searchBtn"><i class = 'fas fa-search'></i></button>
+        <button class="searchBtn" id="searchBtn"><i class = 'fas fa-search'></i></button> 
        <table class="coins" id="coins"  >
            <tr>
                <th>Market Cap Rank</th>
@@ -55,8 +68,7 @@
                 <th>Volume over 24hrs</th>
             </tr>
        </table>
-    </div>
-    <script src = 'script.js'></script>
-</body>
+    </div>  -->
+    <script src="script.js"></script>
+  </body>
 </html>
-
