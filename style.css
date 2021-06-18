@@ -46,7 +46,6 @@ nav .header li {
   line-height: 120px;
   margin: 0px 10px;
   height: 100px;
-  /* background-color: yellow; */
 }
 
 nav .header li a {
@@ -152,7 +151,7 @@ label #cancel {
 }
 
 .searchInput {
-  width: 80%;
+  width: 50%;
   height: 30px;
   margin-bottom: 20px;
   border-radius: 20px;
@@ -170,11 +169,11 @@ label #cancel {
   background-color: transparent;
   color: white;
   border: 3px solid rgba(0, 255, 0, 1);
-  height: 30px;
+  height: 40px;
   width: 100px;
   border-radius: 20px;
   margin-bottom: 20px;
-  margin-left: 0.5%;
+  margin-left: 5%;
 }
 
 .searchInput::placeholder {
@@ -192,9 +191,9 @@ label #cancel {
 .searchBtn {
   border: none;
   font-size: 20px;
-  height: 30px;
+  height: 40px;
   width: 60px;
-  margin-left: 0.5%;
+  margin-left: 5%;
   border-radius: 20px;
   color: white;
   background-color: transparent;
@@ -206,47 +205,33 @@ label #cancel {
 }
 
 .charting {
-  position: absolute;
-  top: 200%;
-  left: 50%;
-  background-color: transparent;
-  transform: translate(-50%);
-  width: 50%;
+  width: 40%;
+  margin: auto;
+  margin-top: 50px;
 }
 
 .coins,
 .watchListCoins {
-  z-index: 2;
-  width: 100%;
-  background-color: #fafafa;
-  text-align: center;
   border-collapse: collapse;
-  box-shadow: 0px 2px 12px rgba(32, 32, 32, 0.3);
 }
-
 .coins th,
 .watchListCoins th {
-  background-color: #bd9b93;
-  font-family: "Poppins", sans-serif;
-  text-transform: uppercase;
-  color: white;
-  font-size: 15px;
-}
-
-.coins th,
-td,
-.watchListCoins th,
-td {
-  padding: 10px 15px;
+  background-color: black;
+  color: rgb(208, 214, 208);
+  font-weight: bold;
 }
 
 .coins td,
-.watchListCoins td {
-  font-family: "Poppins", sans-serif;
+.coins th,
+.watchListCoins td,
+.watchListCoins th {
+  padding: 6px;
+  text-align: center;
+  color: rgb(208, 214, 208);
 }
 
 tr:nth-last-child(odd) {
-  background-color: #ebeae9;
+  background-color: #7c654f;
 }
 
 @media (max-width: 1180px) {
@@ -262,6 +247,54 @@ tr:nth-last-child(odd) {
     width: 75px;
     height: 30px;
     font-size: 7px;
+  }
+
+  .searchInput {
+    width: 40%;
+    font-size: 12px;
+  }
+  .watchList,
+  .searchBtn {
+    width: 20%;
+    font-size: 12px;
+  }
+
+  .coins,
+  .coins thead,
+  .coins tbody,
+  .coins th,
+  .coins td,
+  .coins tr,
+  .watchListCoins,
+  .watchListCoins thead,
+  .watchListCoins tbody,
+  .watchListCoins th,
+  .watchListCoins td,
+  .watchListCoins tr {
+    display: block;
+  }
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  tr {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+  }
+  td {
+    border: none;
+    border-bottom: 0.5px solid black;
+    position: relative;
+    padding-left: 50%;
+  }
+  td:before {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
   }
 }
 
@@ -336,6 +369,22 @@ tr:nth-last-child(odd) {
     background-color: black;
     padding: 10px;
     border-radius: 20px;
+  }
+
+  .searchInput {
+    width: 30%;
+    font-size: 9px;
+  }
+
+  .searchBtn {
+    width: 10%;
+    font-size: 9px;
+    margin-left: 15%;
+  }
+  .watchList {
+    width: 20%;
+    font-size: 9px;
+    margin-left: 15%;
   }
 
   #check:checked ~ .header {
