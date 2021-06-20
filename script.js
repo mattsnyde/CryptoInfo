@@ -15,11 +15,17 @@ const stableMarketCapEl = document.querySelector("#stableMarketCap");
 const totalMarketCapEl = document.querySelector("#totalMarketCap");
 const totalVolume24hrsEl = document.querySelector("#totalVolume24hrs");
 
+//Lines19-20, main table with the 500 coins listed as wlel as the container in which the chart is held in
 const table = document.querySelector("#coins");
 const container = document.querySelector("#charting");
 
+//Lines 23-24 searchBtn as well as searchBar the suer can use to find the specific coins theat they are looking for
 const searchBtn = document.querySelector("#searchBtn");
 const searchInput = document.querySelector("#searchInput");
+
+//Lines 27-28  are the watchListBtn and the table itself, the btn allowsthe user to toggle between the main table with 500 coins and the coins that they are personally watching
+const watchListBtn = document.querySelector("#watchList");
+const watchListTbl = document.querySelector("#watchListCoins");
 
 function formatBigNumbers(x) {
   return x.toLocaleString();
@@ -38,7 +44,7 @@ request(
     console.log(stringified);
 
     let time = stringified.status.timestamp; //gets the time from the stringified object
-    let currentTime = new Date(time).toLocaleTimeString(); //convert the tim we retired to local time string
+    let currentTime = new Date(time).toLocaleTimeString(); //convert the time we retired to local time string
     let currentDate = new Date(time).toLocaleDateString(); //convert the time we retrieved to local date string
     timeStampEl.innerHTML += `<br>${currentDate} ${currentTime}`; //Set the innerHTML to contain the currentDate and currentTime
 
@@ -75,18 +81,6 @@ request(
 
 request(
   "GET",
-  "https://pro-api.coinmarketcap.com/v1/key/info?CMC_PRO_API_KEY=" +
-    apikey.API_KEY
-)
-  .then((r2) => {
-    //Gives me information on my plan with their CoinMarket API
-    console.log(r2);
-    console.log(JSON.parse(r2.target.responseText), "this is r2");
-  })
-  .catch();
-
-request(
-  "GET",
   "https://pro-api.coinmarketcap.com/v1/fiat/map?CMC_PRO_API_KEY=" +
     apikey.API_KEY
 )
@@ -97,31 +91,18 @@ request(
   })
   .catch();
 
-request(
-  "GET",
-  "https://pro-api.coinmarketcap.com/v1/partners/flipside-crypto/fcas/listings/latest?CMC_PRO_API_KEY=" +
-    apikey.API_KEY
-)
-  .then((r4) => {
-    //Represents the health of the cryptocurrency proiject (determines how scammy it is)
-    console.log("this is r4", r4);
-  })
-  .catch();
-
-// request('GET', 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?limit=40CMC_PRO_API_KEY='+apikey.API_KEY).then((r5)=>{
-//     console.log(r5, 'this is r5')
-//     console.log(JSON.parse(r5.target.responseText), 'this is r5')
-// }).catch()
-
+let oldNumber = [];
+let newNumber = [];
 request("GET", "https://data.messari.io/api/v2/assets?limit=500")
   .then((r6) => {
     //The api i am using to get the top 500 crypto tokens information is: https://messari.io/api/docs#tag/Assets
     let text = JSON.parse(r6.target.responseText);
     let importantInfo = [];
     let criticalInfo = [];
-    let tblBody = document.createElement("tbody");
+    let tblBody = document.createElement("tbody"); //create a table body
     for (let i = 0; i < text.data.length; i++) {
-      //runs through the arrays that contains all the tokens, there are 500 tokens we are looking at it
+      //text.data.length represents the number of rows which in this case is 500.
+      //Lines 125-142 run through the information we are collecting on the top 500 coins such as the symbol of coin, name, all time high, market cap rank, coin market cap, current price, and volume over 24hrsd.
       let coinSymbol = text.data[i].symbol;
       let coinName = text.data[i].name;
       let coinAllTimeHigh = text.data[i].metrics.all_time_high.price;
@@ -140,33 +121,52 @@ request("GET", "https://data.messari.io/api/v2/assets?limit=500")
         dollar_format.format(coinCurrentPrice),
         dollar_format.format(volumeLast24Hrs),
       ];
-      importantInfo.push(tokenInfo);
-      let row = document.createElement("tr");
+      importantInfo.push(tokenInfo); //Here I create a nested array with my token info so i can populate my table with new rows and cells.
+      let row = document.createElement("tr"); //create row
       for (let j = 0; j < 7; j++) {
-        let cell = document.createElement("td");
+        //7 represents the amount of columns in each row
+        let cell = document.createElement("td"); //create cell
 
-        let cellText = document.createTextNode(importantInfo[i][j]);
-        cell.appendChild(cellText);
+        let cellText = document.createTextNode(importantInfo[i][j]); //the cellText is information stored inside of the nested array
+        cell.appendChild(cellText); //append cellText to cell
 
-        row.appendChild(cell);
+        row.appendChild(cell); //append row to cell
       }
-      tblBody.appendChild(row);
+      tblBody.appendChild(row); //append row to tblBody
 
       row.addEventListener("click", () => {
-        //When the user clicks on a row we want to update the localStorage of addToWatchList.
+        let tableBody = document.createElement("tbody"); //create table Body
         let quickStore = [row.innerHTML]; //Get the innerHTML of the row the user has clicked on
+        let nestedTestingStorage = []; //Lines 158-159 create nested array for quickStore infromation
+        nestedTestingStorage.push(quickStore);
+
+        for (let i = 0; i < 1; i++) {
+          //We are only adding 1 row at a time hence the number 1 in the for loop
+          let row = document.createElement("tr"); //create a row
+          for (let j = 1; j < 8; j++) {
+            let cell = document.createElement("td"); //create a cell
+            let cellText = document.createTextNode(
+              //set cellText to information inside of nested array called nestedTestingStorage
+              nestedTestingStorage[i][i].split("<td>")[j].split("</td>")[i]
+            );
+            cell.appendChild(cellText); //append cellText to cell
+            row.appendChild(cell); //append row to cell
+          }
+          tableBody.appendChild(row); //append row to tableBody
+        }
+        watchListTbl.appendChild(tableBody); //append our table to the body of the table
+        container.appendChild(watchListTbl); //append our table to the container
+        //Lines 176-193 our localStorage is nested arrays so we are parsing the storage and then running through the arrays to see if we have duplicate coin market caps anywhere inside of our localStorage and if we do we will revert quickStore back to an empty array and prevent them from being added to the watchListTbl
         if (localStorage.getItem("addToWatchList") != null) {
-          //Check to make sure our localSTORAGE IS NOT EQUAL TO KNOW
           for (
             let i = 0;
             i < JSON.parse(localStorage.getItem("addToWatchList")).length;
             i++
           ) {
-            //Loop through the first array
             for (
               let j = 0;
               j < JSON.parse(localStorage.getItem("addToWatchList"))[i].length;
-              j++ //Access the second array
+              j++
             )
               if (
                 quickStore[0].split("<td>")[2].split("</td>")[0] ==
@@ -174,14 +174,13 @@ request("GET", "https://data.messari.io/api/v2/assets?limit=500")
                   [i][j].split("<td>")[2]
                   .split("</td>")[0]
               ) {
-                //Access the ticker symbols in string version of the row the user has clicked on and compare it to all of the previous ones the user has clicked on by accessing the nested array inside of localStorage and splitting the td's aapart
                 console.log("nope");
                 quickStore = []; //If they are === we will set quickStore back to an empty array so we are not addign duplicates
               }
           }
         }
         let new_data = quickStore; //assign new_data to quickstore
-
+        newNumber.push(new_data.length);
         if (new_data.length !== 0) {
           //as long as new_data !==0 we will add the new_data to localStorage, if new_data.length is 0 that means that what the user clicked on was a duplicate.
           if (localStorage.getItem("addToWatchList") == null) {
@@ -189,6 +188,7 @@ request("GET", "https://data.messari.io/api/v2/assets?limit=500")
             localStorage.setItem("addToWatchList", "[]");
           }
           let old_data = JSON.parse(localStorage.getItem("addToWatchList")); //let old_data === current data inside of LS
+          oldNumber.push(old_data.length);
           old_data.push(new_data); //add to new Data to LS
           localStorage.setItem("addToWatchList", JSON.stringify(old_data));
         }
@@ -198,6 +198,7 @@ request("GET", "https://data.messari.io/api/v2/assets?limit=500")
     container.appendChild(table);
 
     searchBtn.addEventListener("click", () => {
+      //The searchBtn eventListener is used to bring up specific coins the user is looking for, they can be found via, coin rank, coin name, or coin symbol.
       let tokenInfo = [];
       let criticalInfo = [];
       let tableBody = document.createElement("tbody");
@@ -206,81 +207,13 @@ request("GET", "https://data.messari.io/api/v2/assets?limit=500")
   })
   .catch();
 
-const watchListBtn = document.querySelector("#watchList");
-const watchListTbl = document.querySelector("#watchListCoins");
-
-let watchListBtnCount = 0;
-function displayWatchList() {
-  // while(watchListTbl.hasChildNodes()){  //Removes nodes from table while there are still nodes to be removed
-  //     watchListTbl.removeChild(watchListTbl.firstChild)
-  // }
-  let crucialInfo = watchList();
-  watchListBtn.addEventListener("click", () => {
-    watchListBtnCount++;
-    console.log(crucialInfo);
-
-    //  for(let f = 0; f < watchListTbl.rows.length; f++){
-    //     for(let g = 0; g < watchListTbl.rows[f].cells.length; g++){
-    //         console.log(watchListTbl.rows[f].cells[g].innerHTML)
-    //     }
-    // }
-    // for(let k = 0; k < crucialInfo.length; k++){
-    //     for(let l = 0; l <  7; l++){
-    //     for(let f = 1, row; row = watchListTbl.rows[f]; f++){
-    //         for(let g = 0, col; col = row.cells[f]; g++){
-    //           console.log(col.innerText)
-    //         //   console.log(crucialInfo[k][l])
-    //         }
-    //    }
-    //     }
-    // }
-
-    //  for(let i = 0; i < crucialInfo.length; i++){
-    //      for(let j = 0; j < watchListTbl.rows[1].cells[i]; j++){
-    //          console.log(watchListTbl.rows[1].cells[i])
-    //      }
-    //  }
-    // if(watchListBtnCount === 1){
-
-    let tblBody = document.createElement("tbody");
-    for (let k = 0; k < crucialInfo.length; k++) {
-      let row = document.createElement("tr");
-      for (let l = 0; l < 7; l++) {
-        let cell = document.createElement("td");
-        let cellText = document.createTextNode(crucialInfo[k][l]);
-        // console.log('testing array', crucialInfo[k][0])
-        cell.appendChild(cellText);
-        row.appendChild(cell);
-      }
-      tblBody.appendChild(row);
-    }
-    watchListTbl.appendChild(tblBody); //append our table to the body of the table
-    container.appendChild(watchListTbl); //append our table to the container
-
-    // for(let i = 1; i < crucialInfo.length + 1; i++){
-    //     console.log(watchListTbl.rows[i].cells[1].innerText, 'how many rowas')
-
-    // }
-    // for(let i = 0; i < crucialInfo.length; i++){
-    //     for(let l = 1; l < 2; l++){
-    //         console.log(crucialInfo[i][l], 'crucial input here')
-    //     }
-    // }
-    // if(watchListBtnCount % 2 === 0){
-    //     while(watchListTbl.hasChildNodes()){  //Removes nodes from table while there are still nodes to be removed
-    //         watchListTbl.removeChild(watchListTbl.firstChild)
-    //     }
-    // }
-
-    // }
-  });
-
+function watchListSearch() {
+  //Although we have a function called SearchFeature unforntunaltey watchListSearch needs its own search tool as its formatting is a tad different.
+  let crucialInfo = watchList(); //assign watchList to crucialInfo
   searchBtn.addEventListener("click", () => {
     let tableBody = document.createElement("tbody");
-    console.log(
-      "break here -----------------------------------------------------------------------------------------------------------------------"
-    );
     for (let i = 0; i < crucialInfo.length; i++) {
+      //Check to see if crucialInfo coin ranks, coin symbols, or coin names matches the searchInput.value
       if (
         searchInput.value === crucialInfo[i][1] ||
         searchInput.value === crucialInfo[i][2] ||
@@ -351,18 +284,12 @@ function displayWatchList() {
     }
   });
 }
-displayWatchList(); // <-------------------------------------------------Need to move this, everytime you click on the WATCHLISTBTN the list grows by 1 set, as in localStorage is appended to the table 1 time, then 2 times, then 3 times, then 4, and so forth..
+watchListSearch();
 
-function request(method, url) {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open(method, url);
-    xhr.onload = resolve;
-    xhr.onerror = reject;
-    xhr.send();
-  });
-}
-
+//The watchList function runs through our localStorage to get all of the tokens stored inside. LocalStorage as mentioned above is a bunch of nested arrays.
+//Inorder to get the text that we are lookign for I have parse the localStorage and split on the <td> element and then access the array I want and split on the </td> and access the [0] element in the final array.
+//I then put all of these variables inside of an array called tokenInfo and then i push that array to another array making a nested array. This nested array will be used inside of the savedContent function
+//in order to display the localStorage
 function watchList() {
   let importantInfo = [];
   for (
@@ -414,7 +341,7 @@ function watchList() {
   return importantInfo;
 }
 
-function searchFeature(
+function searchFeature( //searchFeature is an abstract function for searching through the main table of 500 coins.
   arrayName,
   tableName,
   arrayName2,
@@ -518,7 +445,8 @@ function searchFeature(
     container.appendChild(tableName);
   }
 }
-
+//The function toggleTables is used to hide and display the tables, since I am not using mutliple pages to display the tables and clicking is a part of the functionality to add coins to your watchList
+//I had to hide tables when the user clicks the watchList btn as well as switch zIndex
 function toggleTables() {
   let watchListBtnClickCount = 1;
   watchListBtn.addEventListener("click", () => {
@@ -537,83 +465,47 @@ function toggleTables() {
 }
 toggleTables();
 
-// localStorage.clear();
-
-function countEm() {
-  let dupsArraySymbol = [];
-  let noDupsArraySymbol = [];
-  let realLength = [];
-  let fakeLength = [];
-  let amountOfDummyFakesIHave = [];
-  let numbersToRemove = [];
-  for (let i = 1; i < watchListTbl.rows.length; i++) {
-    dupsArraySymbol.push(watchListTbl.rows[i].cells[1].innerText);
-    // console.log(watchListTbl.rows[i].cells[1].innerText, 'how many rowas')
-  }
-  console.log(dupsArraySymbol);
-  for (
-    let i = 0;
-    i < JSON.parse(localStorage.getItem("addToWatchList")).length;
-    i++
-  ) {
-    //Loop through the first array
-    for (
-      let j = 0;
-      j < JSON.parse(localStorage.getItem("addToWatchList"))[i].length;
-      j++
-    ) {
-      //Access the second array
-      noDupsArraySymbol.push(
-        JSON.parse(localStorage.getItem("addToWatchList"))
-          [i][j].split("<td>")[2]
-          .split("</td>")[0]
-      );
+//savedContent is a nested function which will only run 1 time and no more, this function is used for the localStorage, if this code where to be outside of this function which only executes once then
+//this code would keep on executing and it would create a lot of duplicates inside of the watchListTbl
+let savedContent = (function () {
+  let executed = false;
+  return function () {
+    if (!executed) {
+      executed = true;
+      let crucialInfo = watchList(); //assign crucialInfo to the nestedArray that is returned fromw watchListFunction
+      let tblBody = document.createElement("tbody"); //create table body
+      for (let k = 0; k < crucialInfo.length; k++) {
+        //Loop through crucialInfo rows
+        let row = document.createElement("tr"); //create row element
+        for (let l = 0; l < 7; l++) {
+          //loop through crucialInfo cells
+          let cell = document.createElement("td"); //create cells element
+          let cellText = document.createTextNode(crucialInfo[k][l]); //assign cellText to informatioon stored in the nested array crucialInfo
+          cell.appendChild(cellText); //append cellText to cell
+          row.appendChild(cell); //append row to cell
+        }
+        tblBody.appendChild(row); //append row to table Body
+      }
+      watchListTbl.appendChild(tblBody); //append our table to the body of the table
+      container.appendChild(watchListTbl); //append our table to the container
     }
-  }
+  };
+})();
+savedContent();
 
-  realLength.push(JSON.parse(localStorage.getItem("addToWatchList")).length);
-  fakeLength.push(watchListTbl.rows.length);
-  console.log(realLength[0], "the real number");
-  console.log(fakeLength[0], "the fake number");
-
-  // if(fakeLength[0] > realLength[0]){
-  //     // console.log(fakeLength[0]-realLength[0])
-  //     for(let i = realLength[0] - 2; i < fakeLength[0]; i++){
-  //     //    console.log(i)
-  //     // document.getElementsByTagName('tr')[i].remove()
-  //     document.querySelector('#watchListCoins').deleteRow(i)
-  //     // console.log()
-  //     // console.log('the fake length', fakeLength[0])
-  //     }
-  // }
-  // for(let i = 0; i < watchListTbl.rows.length; i++){
-  //     console.log(i)
-  // }
-
-  // for(let i = realLength[0] - 2; i < watchListTbl.rows.length; i++){
-  //     numbersToRemove.push(i)
-  //     console.log(i)
-  //     // document.querySelector('#watchListCoins').deleteRow(i)
-  // }
-  // console.log(numbersToRemove.length, 'length ')
-  // for(let i = 0; i < numbersToRemove.length; i++){
-
-  //     document.querySelector('#watchListCoins').deleteRow(numbersToRemove[i])
-  //     console.log(watchListTbl.rows.length, 'the length of table after upodating it')
-  // }
-  // console.log('breakls-----------------------------------------------------------------------------------------------')
-  // if(fakeLength[0] > realLength[0]){
-  //     for(let i = realLength[0]; i < fakeLength[0] - realLength[0]; i++){
-  //         watchListTbl.rows.remove(i)
-  //     }
-  // }
+function request(method, url) {
+  //This function is the power behind the api I am using on this project, The function contains another promise function which is returned
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest(); //assign xhr to HttpRequest
+    xhr.open(method, url); //when its open we want to pass method and url
+    xhr.onload = resolve; //if everything goes correct we want to resolve and get the information
+    xhr.onerror = reject; //if there is an error reject/
+    xhr.send(); //send the information back to us
+  });
 }
-let fakeBtnCount = 1;
-watchListBtn.addEventListener("click", () => {
-  // if(fakeBtnCount % 3 === 0){
-  countEm();
-  //}
-  // fakeBtnCount++;
-  // countEm();
-});
-// localStorage.clear()
+
+//<-----------------------------------------------------------------------------------------------Notes for tomorrow---------------------------------------------------------->
+//1. Make it so you can remove coins off of thw watch List by clicking on the row, will have to go through localStorage in order to remove
+//2. Work on color scheme do some googling on good color schemees cause you dont know crap about doing colors for websites.
+//3. Make the search utilities a bit more centered.
+//4. Figure out the rest of the project, not sure if I can continue without node.js because some of these APIs are complicated
