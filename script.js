@@ -31,8 +31,6 @@ function formatBigNumbers(x) {
   return x.toLocaleString();
 }
 
-console.log(timeStampEl.innerHTML);
-
 request(
   "GET",
   "https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest?CMC_PRO_API_KEY=" +
@@ -451,6 +449,7 @@ function toggleTables() {
   let watchListBtnClickCount = 1;
   watchListBtn.addEventListener("click", () => {
     watchListTbl.style.zIndex = 100;
+    watchListTbl.style.opacity = 1;
     table.style.zIndex = -100;
     table.style.display = "none";
     document.querySelector("#watchListCoins").hidden = false;
@@ -459,6 +458,7 @@ function toggleTables() {
       document.querySelector("#watchListCoins").hidden = true;
       watchListTbl.style.zIndex = -100;
       table.style.zIndex = 100;
+      watchListTbl.style.opacity = 0;
     }
     watchListBtnClickCount++;
   });
@@ -504,8 +504,11 @@ function request(method, url) {
   });
 }
 
-//<-----------------------------------------------------------------------------------------------Notes for tomorrow---------------------------------------------------------->
-//1. Make it so you can remove coins off of thw watch List by clicking on the row, will have to go through localStorage in order to remove
-//2. Work on color scheme do some googling on good color schemees cause you dont know crap about doing colors for websites.
-//3. Make the search utilities a bit more centered.
-//4. Figure out the rest of the project, not sure if I can continue without node.js because some of these APIs are complicated
+const clearWatchList = document.querySelector(".clearWatchList"); //Clear watchList btn
+clearWatchList.addEventListener("click", () => {
+  while (watchListTbl.hasChildNodes()) {
+    //remove all rows from watchList, like it never existed
+    watchListTbl.removeChild(watchListTbl.firstChild);
+  }
+  localStorage.clear(); //also empty out the localSTORAGE.
+});
