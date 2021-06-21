@@ -3,16 +3,6 @@ const container = document.querySelector(".main");
 const search = document.querySelector("#search");
 const searchBtn = document.querySelector("#searchBtn");
 
-// request("GET", "https://api.coinpaprika.com/v1/coins/btc-bitcoin/twitter") //Gets tweets related to the cryptocurrency
-//   .then((r1) => {
-//     let allTweetsAboutToken = [];
-//     let tweetsAboutToken = [];
-//     console.log(JSON.parse(r1.target.responseText), "this is r1");
-//     let response = JSON.parse(r1.target.responseText);
-//     displayTweets(response); //pass in response which is an object of arrays to displayTweets function which will show all the tweets inside of a div.
-//   })
-//   .catch();
-
 function displayTweets(array) {
   main.innerHTML = "";
   array.forEach((tweet) => {
@@ -38,15 +28,8 @@ function displayTweets(array) {
   });
 }
 
-// request("GET", "https://api.coinpaprika.com/v1/coins")
-//   .then((r2) => {
-//     console.log(JSON.parse(r2.target.responseText), "this is r2");
-//     let response = JSON.parse(r2.target.responseText);
-//     checkAllId(response);
-//   })
-//   .catch();
-
 searchBtn.addEventListener("click", () => {
+  //When user clicks on the searchBtn we want to run the request for the coinpaprika api, this will give us an array of all coins
   request("GET", "https://api.coinpaprika.com/v1/coins")
     .then((r2) => {
       console.log(JSON.parse(r2.target.responseText), "this is r2");
@@ -57,6 +40,7 @@ searchBtn.addEventListener("click", () => {
 });
 
 function checkAllId(array) {
+  //This function takes the array from the request we made and it will compare all token ids inside of the array to the value the user entered, if it exists then we will call the displayTweets function otherwise we do nothing
   for (let i = 0; i < array.length; i++) {
     if (search.value === array[i].id) {
       request(
@@ -68,7 +52,6 @@ function checkAllId(array) {
           displayTweets(response); //pass in response which is an object of arrays to displayTweets function which will show all the tweets inside of a div.
         })
         .catch();
-      // displayTweets(array)
     } else {
       console.log("nope");
     }
