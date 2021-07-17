@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous"
+  />
     <title>Crypto Information</title>
     <link
       rel="stylesheet"
@@ -11,16 +17,37 @@
       integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="style.css" />
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+    <link rel="stylesheet" href="newstyle.css">
   </head>
   <body>
-    <nav>
-      <input type="checkbox" id="check" />
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+      <div class="container">
+        <img class="img-custom navbar-brand logo" src="img/greenarrow2.png" alt="" />
+        <h2 class="navbar-brand logo">Crypto Market Watchers</h2>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navmenu">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a href="index.html" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">News</a>
+            </li>
+            <li class="nav-item">
+              <a href="socialArbitration.html" class="nav-link">Social Arbitration</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">Charts</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- <input type="checkbox" id="check" />
       <label for="check">
         <i class="fas fa-bars" id="btn"></i>
         <i class="fas fa-times" id="cancel"></i>
       </label>
-      <img class="logo" src="img/greenarrow2.png" alt="" />
       <h1 class="title">Crypto Market Watchers</h1>
       <ul class = 'header'>
         <li class="home" id="home"><a href="index.html">Home</a></li>
@@ -30,7 +57,7 @@
         <li class="charts" id="charts"><a href="#">Charts</a></li>
         <li class="news" id="news"><a href="#">News</a></li>
         <li class="statistics" id="statistics"><a href="#">Statistics</a></li>
-      </ul>
+      </ul> -->
     </nav>
      <div class="stats">
         <ul>
@@ -70,6 +97,7 @@
                 <th>Volume over 24hrs</th>
             </tr>
        </table>
+       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="script.js"></script>
   </body>
 </html>
