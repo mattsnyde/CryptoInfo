@@ -37,9 +37,7 @@ request(
     apikey.API_KEY
 )
   .then((r1) => {
-    console.log(r1);
     let stringified = JSON.parse(r1.target.responseText);
-    console.log(stringified);
 
     let time = stringified.status.timestamp; //gets the time from the stringified object
     let currentTime = new Date(time).toLocaleTimeString(); //convert the time we retired to local time string
@@ -84,8 +82,6 @@ request(
 )
   .then((r3) => {
     //Holds the fiat currency will be good to use later
-    console.log(r3);
-    console.log("this is r3", JSON.parse(r3.target.responseText));
   })
   .catch();
 
@@ -348,7 +344,6 @@ function searchFeature( //searchFeature is an abstract function for searching th
   arrayName3,
   tBodyName
 ) {
-  console.log("hello");
   for (let i = 0; i < arrayName.data.length; i++) {
     //Run through the 500 arrays of crypto information
     if (
@@ -430,7 +425,6 @@ function searchFeature( //searchFeature is an abstract function for searching th
       ];
       arrayName3.push(arrayName2);
       let rows = document.createElement("tr");
-      console.log("rows");
       for (let j = 0; j < 7; j++) {
         let cell = document.createElement("td");
 
