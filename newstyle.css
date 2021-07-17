@@ -83,3 +83,11 @@ table {
   overflow-x: auto;
   white-space: nowrap;
 }
+
+@media (max-width: 400px) {
+  .btn-custom,
+  .input-custom {
+    padding: 5px;
+    font-size: 14px;
+  }
+}
