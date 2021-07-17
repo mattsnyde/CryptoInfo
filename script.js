@@ -98,6 +98,8 @@ request("GET", "https://data.messari.io/api/v2/assets?limit=500")
     let importantInfo = [];
     let criticalInfo = [];
     let tblBody = document.createElement("tbody"); //create a table body
+    tblBody.classList.add("text-success"); //Bootstrap class to give green numbers
+    tblBody.classList.add("table-responsive");
     for (let i = 0; i < text.data.length; i++) {
       //text.data.length represents the number of rows which in this case is 500.
       //Lines 125-142 run through the information we are collecting on the top 500 coins such as the symbol of coin, name, all time high, market cap rank, coin market cap, current price, and volume over 24hrsd.
@@ -373,7 +375,7 @@ function searchFeature( //searchFeature is an abstract function for searching th
       let currentVolume24hrs = dollar_format.format(
         arrayName.data[i].metrics.market_data.real_volume_last_24_hours
       );
-
+      tableName.classList.add("text-success"); //Bootstrap class, the search results will always be green from now on
       //Lines 342-360 create the heading of the table and populate with the data the user is looking for.
       tableName.innerHTML = ` 
                 <tr>

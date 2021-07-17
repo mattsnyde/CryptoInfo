@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
     <title>Crypto Information</title>
     <link
       rel="stylesheet"
@@ -11,65 +17,195 @@
       integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="style.css" />
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+    <link rel="stylesheet" href="newstyle.css" />
   </head>
   <body>
-    <nav>
-      <input type="checkbox" id="check" />
-      <label for="check">
-        <i class="fas fa-bars" id="btn"></i>
-        <i class="fas fa-times" id="cancel"></i>
-      </label>
-      <img class="logo" src="img/greenarrow2.png" alt="" />
-      <h1 class="title">Crypto Market Watchers</h1>
-      <ul class = 'header'>
-        <li class="home" id="home"><a href="index.html">Home</a></li>
-        <li class="socialArb" id="socialArb">
-          <a href="socialArbitration.html">Social Arbitration</a>
-        </li>
-        <li class="charts" id="charts"><a href="#">Charts</a></li>
-        <li class="news" id="news"><a href="#">News</a></li>
-        <li class="statistics" id="statistics"><a href="#">Statistics</a></li>
-      </ul>
-    </nav>
-     <div class="stats">
-        <ul>
-            <li><div class="time" id="time">Time Stamp:</div></li>
-            <li><div class="defiMarketCap" id="defiMarketCap">Defi-Market Cap:</div></li>
-            <li><div class="altMarketCap" id="altMarketCap">Alt-Market Cap:</div></li>
-            <li><div class="stableMarketCap" id="stableMarketCap">Stable Market Cap:</div></li>
-            <li><div class="totalMarketCap" id="totalMarketCap">Total Market Cap:</div></li>
-            <li><div class="totalVolume24Hrs" id="totalVolume24hrs">Total Volume 24hrs:</li>
-        </ul>
-    </div>
-      <div class="charting" id="charting">
-          <input type="text" class="searchInput" id="searchInput" placeholder = 'Search By Coin Name'>
-          <button class='clearWatchList' id='clearWatchList'>Clear Watch List</button>
-          <button class="watchList" id="watchList">Watch List</button>
-          <button class="searchBtn" id="searchBtn"><i class = 'fas fa-search'></i></button>
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+      <div class="container">
+        <img
+          class="img-custom navbar-brand logo"
+          src="img/greenarrow2.png"
+          alt=""
+        />
+        <h2 class="navbar-brand logo">Crypto Market Watchers</h2>
+        <button
+          class="hamburger-button navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navmenu"
+        >
+          <span class="hamburger-icon navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navmenu">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a href="index.html" class="effects nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="effects nav-link">News</a>
+            </li>
+            <li class="nav-item">
+              <a href="socialArbitration.html" class="effects nav-link"
+                >Social Arbitration</a
+              >
+            </li>
+            <li class="nav-item">
+              <a href="#" class="effects nav-link">Charts</a>
+            </li>
+          </ul>
         </div>
-        <table class="coins" id="coins"  >
-           <tr>
-               <th>Market Cap Rank</th>
-               <th>Coin Symbol</th>
-               <th>Coin Name</th>
-               <th>Market Cap</th>
-               <th>All Time High</th>
-               <th>Current Price</th>
-               <th>Volume over 24hrs</th>
-           </tr>
-       </table>
-       <table class = 'watchListCoins' id = 'watchListCoins' hidden>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row row-cols-1 row-cols-md-2">
+        <div class="col col-md-4 col-xxl-2">
+          <div class="custom-card card text-white bg-dark mb-3 mt-4">
+            <div class="card-header">Time Stamp</div>
+            <div class="card-body">
+              <div class="card-title">Current Local Time</div>
+              <p class="card-text time" id="time"></p>
+            </div>
+          </div>
+        </div>
+        <div class="col col-md-4 col-xxl-2">
+          <div class="custom-card card text-black bg-secondary mb-3 mt-4">
+            <div class="card-header">Defi-Market-Cap</div>
+            <div class="card-body">
+              <div class="card-title">Decentralized Finance Market Cap</div>
+              <p class="card-text defiMarketCap" id="defiMarketCap"></p>
+            </div>
+          </div>
+        </div>
+        <div class="col col-md-4 col-xxl-2">
+          <div class="custom-card card text-light bg-dark mb-3 mt-4">
+            <div class="card-header">Alt-Market-Cap</div>
+            <div class="card-body">
+              <div class="card-title">Altcoin Market Cap</div>
+              <p class="card-text altMarketCap" id="altMarketCap"></p>
+            </div>
+          </div>
+        </div>
+        <div class="col col-md-4 col-xxl-2">
+          <div class="custom-card card text-dark bg-secondary mb-3 mt-4">
+            <div class="card-header">Stable-Market-Cap</div>
+            <div class="card-body">
+              <div class="card-title">Stable Coin Market Cap</div>
+              <p class="card-text stableMarketCap" id="stableMarketCap"></p>
+            </div>
+          </div>
+        </div>
+        <div class="col col-md-4 col-xxl-2">
+          <div class="custom-card card text-light bg-dark mb-3 mt-4">
+            <div class="card-header">Total Market Cap</div>
+            <div class="card-body">
+              <div class="card-title">
+                Combined Market Cap for all cryptocurrencies
+              </div>
+              <p class="card-text totalMarketCap" id="totalMarketCap"></p>
+            </div>
+          </div>
+        </div>
+        <div class="col col-md-4 col-xxl-2">
+          <div class="custom-card card text-dark bg-secondary mb-3 mt-4">
+            <div class="card-header">Total Volume</div>
+            <div class="card-body">
+              <div class="card-title">Volume over last 24hrs</div>
+              <p class="card-text totalVolume24hrs" id="totalVolume24hrs"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid charting mt-5" id="charting">
+      <div class="row row-cols-1 row-cols-sm-2 text-center gy-2 gx-5">
+        <div class="col-6 col-xxl-3">
+          <input
+            type="text"
+            class="input-custom searchInput"
+            id="searchInput"
+            placeholder="Search By Coin Name..."
+          />
+        </div>
+        <div class="col-6 col-xxl-3">
+          <button class="btn-custom clearWatchList" id="clearWatchList">
+            Clear Watch List
+          </button>
+        </div>
+        <div class="col-6 col-xxl-3">
+          <button class="btn-custom watchList" id="watchList">
+            Watch List
+          </button>
+        </div>
+        <div class="col-6 col-xxl-3">
+          <button class="btn-custom searchBtn" id="searchBtn">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col table-responsive">
+          <table
+            class="
+              table table-bordered table-hover table-dark table-striped
+              mt-5
+              text-center
+              table-responsive
+              coins
+            "
+            id="coins"
+          >
             <tr>
-                <th>Market Cap Rank</th>
-                <th>Coin Symbol</th>
-                <th>Coin Name</th>
-                <th>Market Cap</th>
-                <th>All Time High</th>
-                <th>Current Price</th>
-                <th>Volume over 24hrs</th>
+              <th scope="col">Market Cap Rank</th>
+              <th scope="col">Coin Symbol</th>
+              <th scope="col">Coin Name</th>
+              <th scope="col">Market Cap</th>
+              <th scope="col">All Time High</th>
+              <th scope="col">Current Price</th>
+              <th scope="col">Volume over 24hrs</th>
             </tr>
-       </table>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col table-responsive">
+          <table
+            class="
+              table table-bordered table-hover table-dark table-striped
+              mt-5
+              text-center
+              table-responsive
+              watchListCoins
+            "
+            id="watchListCoins"
+            hidden
+          >
+            <tr>
+              <th>Market Cap Rank</th>
+              <th>Coin Symbol</th>
+              <th>Coin Name</th>
+              <th>Market Cap</th>
+              <th>All Time High</th>
+              <th>Current Price</th>
+              <th>Volume over 24hrs</th>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
     <script src="script.js"></script>
   </body>
 </html>
